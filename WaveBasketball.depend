@@ -1,0 +1,57 @@
+# depslib dependency file v1.0
+1461835381 source:/home/mikosama/workspace/WaveBasketball/Ball.cpp
+	"Ball.h"
+	"Vector.h"
+	"BasicStuff.h"
+	<GL/glut.h>
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<unistd.h>
+
+1461813499 /home/mikosama/workspace/WaveBasketball/Ball.h
+	"Vector.h"
+	"BasicStuff.h"
+
+1461478751 /home/mikosama/workspace/WaveBasketball/Vector.h
+
+1461832876 /home/mikosama/workspace/WaveBasketball/BasicStuff.h
+
+1461832870 source:/home/mikosama/workspace/WaveBasketball/BasicStuff.cpp
+
+1462015572 source:/home/mikosama/workspace/WaveBasketball/main.cpp
+	<iostream>
+	<GL/glut.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<unistd.h>
+	<fcntl.h>
+	<math.h>
+	<SOIL/SOIL.h>
+	"BasicStuff.h"
+	"Vector.h"
+	"Ball.h"
+
+1461774551 source:/home/mikosama/workspace/WaveBasketball/Vector.cpp
+	"Vector.h"
+	<math.h>
+
+1462014047 source:/home/mikosama/workspace/WaveBasketball/pulse_async_test.cpp
+	<stdio.h>
+	<time.h>
+	<pulse/mainloop.h>
+	<pulse/context.h>
+	<pulse/stream.h>
+	<pulse/error.h>
+	"yswavfile.h"
+
+1329240436 /home/mikosama/workspace/WaveBasketball/yswavfile.h
+
+1329335162 source:/home/mikosama/workspace/WaveBasketball/yswavfile.cpp
+	<stdio.h>
+	<string.h>
+	<math.h>
+	"yswavfile.h"
+
