@@ -61,6 +61,9 @@ void saveLeaderboard();// Another forward declaration
 void saveme()
 {
     gamestate = GAMEOVER;
+    int i;
+    for(i=0;i<NUM_SOURCES;i++)
+        alSourceStop(sources[i]);
 }
 
 void my_exit()// A custom exit function
@@ -404,7 +407,7 @@ void playGame()// The actual game display function
 
     if(timecount == 0)
     {
-        gamestate = GAMEOVER;
+        saveme();
         alSourceStop(playsrc);
         alSourcePlay(mainscreensrc);
         glutDisplayFunc(gameOverScreen);
@@ -851,6 +854,8 @@ void setAudio()
 
     alSourcei(mainscreensrc,AL_LOOPING, 1);
     alSourcei(playsrc, AL_LOOPING, 1);
+
+    setListenerstuff(400,300,0,AL_POSITION);
 }
 
 int main(int argc,char *argv[])
