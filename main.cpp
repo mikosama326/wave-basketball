@@ -64,6 +64,7 @@ void saveme()
     int i;
     for(i=0;i<NUM_SOURCES;i++)
         alSourceStop(sources[i]);
+
 }
 
 void my_exit()// A custom exit function
@@ -855,7 +856,8 @@ void setAudio()
     alSourcei(mainscreensrc,AL_LOOPING, 1);
     alSourcei(playsrc, AL_LOOPING, 1);
 
-    setListenerstuff(400,300,0,AL_POSITION);
+    setSourcestuff(0,0,0,mainscreensrc,AL_POSITION);
+    setListenerstuff(1000,300,0,AL_POSITION);
 }
 
 int main(int argc,char *argv[])
