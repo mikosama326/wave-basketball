@@ -55,3 +55,35 @@
 	<math.h>
 	"yswavfile.h"
 
+1461835381 source:/home/mikosama/CGProject/WaveBasketball/Ball.cpp
+	"Ball.h"
+	"Vector.h"
+	"BasicStuff.h"
+	<GL/glut.h>
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<unistd.h>
+
+1461813499 /home/mikosama/CGProject/WaveBasketball/Ball.h
+	"Vector.h"
+	"BasicStuff.h"
+
+1461478751 /home/mikosama/CGProject/WaveBasketball/Vector.h
+
+1461832876 /home/mikosama/CGProject/WaveBasketball/BasicStuff.h
+
+1461832870 source:/home/mikosama/CGProject/WaveBasketball/BasicStuff.cpp
+
+1461774551 source:/home/mikosama/CGProject/WaveBasketball/Vector.cpp
+	"Vector.h"
+	<math.h>
+
+1462097664 source:/home/mikosama/CGProject/WaveBasketball/AudioStuff.cpp
+	<AL/al.h>
+	<AL/alc.h>
+	<AL/alut.h>
+	<stdio.h>
+	<stdlib.h>
+

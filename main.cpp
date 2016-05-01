@@ -14,6 +14,7 @@ using namespace std;
 #include "BasicStuff.h"
 #include "Vector.h"
 #include "Ball.h"
+#include "AudioStuff.h"
 
 #define START_BUTTON_X 300
 #define START_BUTTON_Y 150
@@ -25,6 +26,10 @@ using namespace std;
 #define EXIT_BUTTON_SMALL_Y 30
 
 #define SCORESTR_LENGTH 10
+
+#define NUM_BUFFERS 9
+#define NUM_SOURCES 9
+
 
 //#define FLOORRES 1
 
@@ -44,10 +49,12 @@ GLuint MainMenuImg, StartButtonImg, StartButtonImgOver, BackdropImg, SmallExitIm
 
 int starttime;//handles the weird issue with the timer starting earlier than the game
 
+//Variables for openAL
+ALuint buffers[NUM_BUFFERS];
+ALuint sources[NUM_SOURCES];
+
 void scoreSave1();// Forward declaration for the scoreSave function
 void saveLeaderboard();// Another forward declaration
-
-extern int playAudio(const char av[]);
 
 void saveme()
 {
@@ -500,30 +507,39 @@ void keys(unsigned char key, int x, int y)// Key down callback function
         {
             case 'z':
                 ux = 0;
+                alSourcePlay(sources[0]);
                 break;
             case 'x':
                 ux = 100;
+                alSourcePlay(sources[1]);
                 break;
             case 'c':
                 ux = 200;
+                alSourcePlay(sources[2]);
                 break;
             case 'v':
                 ux = 300;
+                alSourcePlay(sources[3]);
                 break;
             case 'b':
                 ux = 400;
+                alSourcePlay(sources[4]);
                 break;
             case 'n':
                 ux = 500;
+                alSourcePlay(sources[5]);
                 break;
             case 'm':
                 ux = 600;
+                alSourcePlay(sources[6]);
                 break;
             case ',':
                 ux = 700;
+                alSourcePlay(sources[7]);
                 break;
             case '.':
                 ux = 800;
+                alSourcePlay(sources[8]);
                 break;
         }
     fy = 0;
@@ -544,17 +560,43 @@ void upkeys(unsigned char key, int x, int y)// Key up callback function
         switch(key)
         {
             case 'z':
+                alSourceStop(sources[0]);
+                alSourceRewind(sources[0]);
+                break;
             case 'x':
+                alSourceStop(sources[1]);
+                alSourceRewind(sources[1]);
+                break;
             case 'c':
+                alSourceStop(sources[2]);
+                alSourceRewind(sources[2]);
+                break;
             case 'v':
+                alSourceStop(sources[3]);
+                alSourceRewind(sources[3]);
+                break;
             case 'b':
+                alSourceStop(sources[4]);
+                alSourceRewind(sources[4]);
+                break;
             case 'n':
+                alSourceStop(sources[5]);
+                alSourceRewind(sources[5]);
+                break;
             case 'm':
+                alSourceStop(sources[6]);
+                alSourceRewind(sources[6]);
+                break;
             case ',':
+                alSourceStop(sources[7]);
+                alSourceRewind(sources[7]);
+                break;
             case '.':
-                fy = uymax;
+                alSourceStop(sources[8]);
+                alSourceRewind(sources[8]);
                 break;
         }
+        fy = uymax;
         floorstate = 1;
     }
     //glutPostRedisplay();
@@ -737,6 +779,30 @@ void scoreSave1()// Saves your highscore for later
     close(scorefd);
 }
 
+void setAudio()
+{
+    int i;
+
+    char files[9][100] = {
+    "audiofiles/c4.wav",
+    "audiofiles/d4.wav",
+    "audiofiles/e4.wav",
+    "audiofiles/f4.wav",
+    "audiofiles/g4.wav",
+    "audiofiles/a4.wav",
+    "audiofiles/b4.wav",
+    "audiofiles/c5.wav",
+    "audiofiles/d5.wav",
+    };
+    for(i=0;i<9;i++)
+    {
+        if(attachAudio(&sources[i],&buffers[i],files[i]) == -1)
+        {
+            alDeleteBuffers(NUM_BUFFERS, buffers);
+            exit(1);
+        }
+    }
+}
 
 int main(int argc,char *argv[])
 {
@@ -762,6 +828,12 @@ int main(int argc,char *argv[])
     myinit();
     textInit();
     gameinit1();
+
+    if(audioinit(NUM_BUFFERS,NUM_SOURCES,buffers,sources) == -1)
+    {
+        exit(1);
+    }
+    setAudio();
 
     gamestate = MAINMENU;
     glutDisplayFunc(mainmenu);
