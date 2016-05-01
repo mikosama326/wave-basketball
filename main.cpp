@@ -52,6 +52,8 @@ int starttime;//handles the weird issue with the timer starting earlier than the
 //Variables for openAL
 ALuint buffers[NUM_BUFFERS];
 ALuint sources[NUM_SOURCES];
+ALuint mainscreensrc, mainscreenbuffer;
+ALuint playsrc, playbuffer;
 
 void scoreSave1();// Forward declaration for the scoreSave function
 void saveLeaderboard();// Another forward declaration
@@ -63,11 +65,24 @@ void saveme()
 
 void my_exit()// A custom exit function
 {
+    alSourceStop(mainscreensrc);
     glutIdleFunc(0); // Turn off Idle function if used.
     glutDestroyWindow(window);
     saveLeaderboard();
     scoreSave1();
     close(fd);
+
+    //Delete openAL sources
+    alDeleteSources(NUM_SOURCES,sources);
+    alDeleteSources(1,&mainscreensrc);
+    alDeleteSources(1,&playsrc);
+    //Delete openAL buffers
+    alDeleteBuffers(NUM_BUFFERS, buffers);
+    alDeleteBuffers(1, &mainscreenbuffer);
+    alDeleteBuffers(1, &playbuffer);
+
+    alutExit();
+
     _exit(0);// For some reason, the exit() function isn't quite working. So we're using _exit() instead. I know, that's bad. Whatever.
 }
 
@@ -390,6 +405,8 @@ void playGame()// The actual game display function
     if(timecount == 0)
     {
         gamestate = GAMEOVER;
+        alSourceStop(playsrc);
+        alSourcePlay(mainscreensrc);
         glutDisplayFunc(gameOverScreen);
         glutPostRedisplay();
     }
@@ -474,6 +491,8 @@ void mouse(int btn, int state, int x, int y)// Mouse event callback function
                         gamestate = PLAYING;
                         //b.draw_ball();
                         //glFlush();
+                        alSourceStop(mainscreensrc);
+                        alSourcePlay(playsrc);
                         glutDisplayFunc(playGame);
                         glutPostRedisplay();
                         //myinit();
@@ -485,6 +504,8 @@ void mouse(int btn, int state, int x, int y)// Mouse event callback function
                     if(btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
                     {
                         gamestate = GAMEOVER;
+                        alSourceStop(playsrc);
+                        alSourcePlay(mainscreensrc);
                         glutDisplayFunc(gameOverScreen);
                         glutPostRedisplay();
                     }
@@ -783,17 +804,27 @@ void setAudio()
 {
     int i;
 
+    //Generate buffers and sources
+    if(audioinit(NUM_BUFFERS,NUM_SOURCES,buffers,sources) == -1)
+        exit(1);
+    if(audioinit(1,1,&mainscreenbuffer,&mainscreensrc) == -1)
+        exit(1);
+    if(audioinit(1,1,&playbuffer,&playsrc) == -1)
+        exit(1);
+
+    //Set the keypress buffers
     char files[9][100] = {
     "audiofiles/c4.wav",
     "audiofiles/d4.wav",
-    "audiofiles/e4.wav",
+    "audiofiles/dSharp4.wav",
     "audiofiles/f4.wav",
     "audiofiles/g4.wav",
     "audiofiles/a4.wav",
-    "audiofiles/b4.wav",
+    "audiofiles/aSharp4.wav",
     "audiofiles/c5.wav",
     "audiofiles/d5.wav",
     };
+
     for(i=0;i<9;i++)
     {
         if(attachAudio(&sources[i],&buffers[i],files[i]) == -1)
@@ -802,6 +833,24 @@ void setAudio()
             exit(1);
         }
     }
+
+    //Set the Main Menu and Play screen buffers
+    if(attachAudio(&mainscreensrc,&mainscreenbuffer,"audiofiles/SomeRandomThing.wav") == -1)
+    {
+        alDeleteBuffers(NUM_BUFFERS, buffers);
+        alDeleteBuffers(1, &mainscreenbuffer);
+        exit(1);
+    }
+    if(attachAudio(&playsrc,&playbuffer,"audiofiles/SomeRandomThingBG.wav") == -1)
+    {
+        alDeleteBuffers(NUM_BUFFERS, buffers);
+        alDeleteBuffers(1, &mainscreenbuffer);
+        alDeleteBuffers(1, &playbuffer);
+        exit(1);
+    }
+
+    alSourcei(mainscreensrc,AL_LOOPING, 1);
+    alSourcei(playsrc, AL_LOOPING, 1);
 }
 
 int main(int argc,char *argv[])
@@ -819,7 +868,7 @@ int main(int argc,char *argv[])
     glutInit(&argc,argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
     glutInitWindowSize(WIDTH,HEIGHT);
-    window = glutCreateWindow("Audio? Basketball");
+    window = glutCreateWindow("Audio Basketball -- By TheDarkMiko");
 
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
@@ -829,10 +878,6 @@ int main(int argc,char *argv[])
     textInit();
     gameinit1();
 
-    if(audioinit(NUM_BUFFERS,NUM_SOURCES,buffers,sources) == -1)
-    {
-        exit(1);
-    }
     setAudio();
 
     gamestate = MAINMENU;
@@ -843,6 +888,7 @@ int main(int argc,char *argv[])
     glutKeyboardFunc(keys);
     glutIdleFunc(myidle);
 
+    alSourcePlay(mainscreensrc);
     glutMainLoop();
 
     return 0;

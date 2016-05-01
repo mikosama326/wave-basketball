@@ -46,6 +46,7 @@ int attachAudio(ALuint *source, ALuint *buffer, const char *file)//Load an audio
       printf("alSourcei %s : %d",file,error);
       return -1;
     }
+    return 0;
 }
 
 void setSourcestuff(ALfloat x,ALfloat y,ALfloat z, ALuint sid,ALenum param)

@@ -1,33 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Release" />
-	<File name="main.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="10004" topLine="116" />
+			<Cursor1 position="17591" topLine="713" />
 		</Cursor>
-		<Folding>
-			<Collapse line="52" />
-			<Collapse line="57" />
-			<Collapse line="67" />
-			<Collapse line="80" />
-			<Collapse line="105" />
-			<Collapse line="114" />
-			<Collapse line="124" />
-			<Collapse line="154" />
-			<Collapse line="188" />
-			<Collapse line="220" />
-			<Collapse line="245" />
-			<Collapse line="281" />
-			<Collapse line="290" />
-			<Collapse line="357" />
-			<Collapse line="419" />
-			<Collapse line="449" />
-			<Collapse line="456" />
-		</Folding>
 	</File>
 	<File name="Ball.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="4089" topLine="140" />
+			<Cursor1 position="1043" topLine="183" />
+		</Cursor>
+	</File>
+	<File name="AudioStuff.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1192" topLine="0" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

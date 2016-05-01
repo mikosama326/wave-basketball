@@ -61,10 +61,17 @@ void Ball :: moveball()
             char log[512];
             sprintf(log,"DIES !!\nOne of our positions is out of bounds: %f %f\n",ballpos.xcomp,ballpos.ycomp);
             write(fd, log, strlen(log));
-            oops = 1;
-            saveme();
-            glutDisplayFunc(gameOverScreen);
-            glutPostRedisplay();
+
+            if(ballpos.xcomp < -BALLRADIUS) {ballpos.xcomp = 0; ballspeed.xcomp *= -1;}
+            if(ballpos.ycomp < -BALLRADIUS) {ballpos.ycomp = 10; ballspeed.ycomp *= -1;}
+            if(ballpos.xcomp > WIDTH+BALLRADIUS) {ballpos.xcomp = WIDTH; ballspeed.xcomp *= -1;}
+            if(ballpos.ycomp > HEIGHT+BALLRADIUS) {ballpos.ycomp = HEIGHT; ballspeed.ycomp *= -1;}
+
+
+            //oops = 1;
+            //saveme();
+            //glutDisplayFunc(gameOverScreen);
+            //glutPostRedisplay();
 
             //glutDestroyWindow(window);
             //_exit(1);
