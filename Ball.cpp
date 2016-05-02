@@ -196,7 +196,7 @@ void Ball :: checkscore()
         {
             if(score > highscores[i])
             {
-                for(j=i+1;j<HIGHSCORES_SIZE;j++)
+                for(j=HIGHSCORES_SIZE-1;j >= (i+1);j--)
                     highscores[j] = highscores[j-1];
                 highscores[i] = score;
                 return;

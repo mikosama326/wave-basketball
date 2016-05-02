@@ -34,7 +34,7 @@ int attachAudio(ALuint *source, ALuint *buffer, const char *file)//Load an audio
     *buffer = alutCreateBufferFromFile(file);
     if ((error = alGetError()) != AL_NO_ERROR)
     {
-      printf("alutLoadWAVFile %s : %d",file,error);
+      printf("alutLoadWAVFile %s : %d\n",file,error);
       // Delete Buffers
       //alDeleteBuffers(1, buffer);
       return -1;
@@ -43,7 +43,7 @@ int attachAudio(ALuint *source, ALuint *buffer, const char *file)//Load an audio
     alSourcei(*source, AL_BUFFER, *buffer);
     if ((error = alGetError()) != AL_NO_ERROR)
     {
-      printf("alSourcei %s : %d",file,error);
+      printf("alSourcei %s : %d\n",file,error);
       return -1;
     }
     return 0;

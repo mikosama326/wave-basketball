@@ -49,23 +49,28 @@ GLuint MainMenuImg, StartButtonImg, StartButtonImgOver, BackdropImg, SmallExitIm
 
 int starttime;//handles the weird issue with the timer starting earlier than the game
 
+float reshapex = 1, reshapey = 1;//Meant for handling what happens if we reshape the game.
+
 //Variables for openAL
 ALuint buffers[NUM_BUFFERS];
 ALuint sources[NUM_SOURCES];
 ALuint mainscreensrc, mainscreenbuffer;
 ALuint playsrc, playbuffer;
+ALuint gameoversrc, gameoverbuffer;
 
 void scoreSave1();// Forward declaration for the scoreSave function
 void saveLeaderboard();// Another forward declaration
 
-void saveme()
+/*void saveme()
 {
     gamestate = GAMEOVER;
     int i;
     for(i=0;i<NUM_SOURCES;i++)
         alSourceStop(sources[i]);
+}*/
 
-}
+void switchtoGameOver();
+void switchtoPlay();
 
 void my_exit()// A custom exit function
 {
@@ -74,16 +79,20 @@ void my_exit()// A custom exit function
     glutDestroyWindow(window);
     saveLeaderboard();
     scoreSave1();
+    saveLeaderboard();
     close(fd);
 
     //Delete openAL sources
     alDeleteSources(NUM_SOURCES,sources);
-    alDeleteSources(1,&mainscreensrc);
     alDeleteSources(1,&playsrc);
+    alDeleteSources(1,&gameoversrc);
     //Delete openAL buffers
     alDeleteBuffers(NUM_BUFFERS, buffers);
-    alDeleteBuffers(1, &mainscreenbuffer);
     alDeleteBuffers(1, &playbuffer);
+    alDeleteBuffers(1, &gameoverbuffer);
+
+    alDeleteSources(1,&mainscreensrc);
+    alDeleteBuffers(1,&mainscreenbuffer);
 
     alutExit();
 
@@ -408,10 +417,7 @@ void playGame()// The actual game display function
 
     if(timecount == 0)
     {
-        saveme();
-        alSourceStop(playsrc);
-        alSourcePlay(mainscreensrc);
-        glutDisplayFunc(gameOverScreen);
+        switchtoGameOver();
         glutPostRedisplay();
     }
 
@@ -449,8 +455,8 @@ void mouseOverButtons(int x, int y)// The mouseover callback function
     switch(gamestate)
     {
         case MAINMENU:
-            if(x >= START_BUTTON_X && x <= (START_BUTTON_X + 170))
-                if(y <= (HEIGHT - START_BUTTON_Y) && y >= ((HEIGHT - START_BUTTON_Y) - 60))
+            if(x >= START_BUTTON_X*reshapex && x <= (START_BUTTON_X + 170)*reshapex)
+                if(y <= (HEIGHT - START_BUTTON_Y)*reshapey && y >= ((HEIGHT - START_BUTTON_Y) - 60)*reshapey)
                 {
                     StartButton = StartButtonImgOver;
                     break;
@@ -486,37 +492,27 @@ void mouse(int btn, int state, int x, int y)// Mouse event callback function
     switch(gamestate)
     {
         case MAINMENU:
-            if(x >= START_BUTTON_X && x <= (START_BUTTON_X + 140))
-                if(y <= (HEIGHT - START_BUTTON_Y) && y >= ((HEIGHT - START_BUTTON_Y) - 50))
+            if(x >= START_BUTTON_X*reshapex && x <= (START_BUTTON_X + 140)*reshapex)
+                if(y <= (HEIGHT - START_BUTTON_Y)*reshapey && y >= ((HEIGHT - START_BUTTON_Y) - 50)*reshapey)
                     if(btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
                     {
-                        //gameinit1();
-                        playinit();
-                        gamestate = PLAYING;
-                        //b.draw_ball();
-                        //glFlush();
-                        alSourceStop(mainscreensrc);
-                        alSourcePlay(playsrc);
-                        glutDisplayFunc(playGame);
+                        switchtoPlay();
                         glutPostRedisplay();
                         //myinit();
                     }
             break;
         case PLAYING:
-        if(x >= EXIT_BUTTON_SMALL_X && x <= (EXIT_BUTTON_SMALL_X + 170))
-                if(y <= (HEIGHT - EXIT_BUTTON_SMALL_Y) && y >= ((HEIGHT - EXIT_BUTTON_SMALL_Y) - 60))
+        if(x >= EXIT_BUTTON_SMALL_X*reshapex && x <= (EXIT_BUTTON_SMALL_X + 170)*reshapex)
+                if(y <= (HEIGHT - EXIT_BUTTON_SMALL_Y)*reshapey && y >= ((HEIGHT - EXIT_BUTTON_SMALL_Y) - 60)*reshapey)
                     if(btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
                     {
-                        gamestate = GAMEOVER;
-                        alSourceStop(playsrc);
-                        alSourcePlay(mainscreensrc);
-                        glutDisplayFunc(gameOverScreen);
+                        switchtoGameOver();
                         glutPostRedisplay();
                     }
         break;
         case GAMEOVER:
-            if(x >= EXIT_BUTTON_X && x <= (EXIT_BUTTON_X + 170))
-                if(y <= (HEIGHT - EXIT_BUTTON_Y) && y >= ((HEIGHT - EXIT_BUTTON_Y) - 60))
+            if(x >= EXIT_BUTTON_X*reshapex && x <= (EXIT_BUTTON_X + 170)*reshapex)
+                if(y <= (HEIGHT - EXIT_BUTTON_Y)*reshapey && y >= ((HEIGHT - EXIT_BUTTON_Y) - 60)*reshapey)
                     if(btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
                         my_exit();
         break;
@@ -723,11 +719,11 @@ void readScores()//Reads from the leaderboard file
         for(i=0;i < HIGHSCORES_SIZE;i++)
             highscores[i] = 0;
 
-    #ifdef DEBUG
+    //#ifdef DEBUG
     for(i=0;i < HIGHSCORES_SIZE;i++)
         printf("%d ",highscores[i]);
     printf("\n");
-    #endif // DEBUG
+    //#endif // DEBUG
 
     close(scorefd);
 }
@@ -760,6 +756,8 @@ void gameinit1()// Initalizing some parameters for the game
         highscore = data;
 
     close(scorefd);
+
+    readScores();
         //highscore = atoi(buf);
     #ifdef DEBUG
     printf("Highscore read: %d\n",highscore);
@@ -807,6 +805,7 @@ void scoreSave1()// Saves your highscore for later
 void setAudio()
 {
     int i;
+    //int error;
 
     //Generate buffers and sources
     if(audioinit(NUM_BUFFERS,NUM_SOURCES,buffers,sources) == -1)
@@ -839,13 +838,13 @@ void setAudio()
     }
 
     //Set the Main Menu and Play screen buffers
-    if(attachAudio(&mainscreensrc,&mainscreenbuffer,"audiofiles/SomeRandomThing.wav") == -1)
+    if(attachAudio(&mainscreensrc,&mainscreenbuffer,"audiofiles/HideFromAll_3.wav") == -1)
     {
         alDeleteBuffers(NUM_BUFFERS, buffers);
         alDeleteBuffers(1, &mainscreenbuffer);
         exit(1);
     }
-    if(attachAudio(&playsrc,&playbuffer,"audiofiles/SomeRandomThingBG.wav") == -1)
+    if(attachAudio(&playsrc,&playbuffer,"audiofiles/SomeRandomThingSoftBG.wav") == -1)
     {
         alDeleteBuffers(NUM_BUFFERS, buffers);
         alDeleteBuffers(1, &mainscreenbuffer);
@@ -853,11 +852,50 @@ void setAudio()
         exit(1);
     }
 
+    gameoversrc = mainscreensrc;
+
     alSourcei(mainscreensrc,AL_LOOPING, 1);
     alSourcei(playsrc, AL_LOOPING, 1);
+    alSourcei(gameoversrc, AL_LOOPING, 1);
 
-    setSourcestuff(0,0,0,mainscreensrc,AL_POSITION);
-    setListenerstuff(1000,300,0,AL_POSITION);
+    //setSourcestuff(0,0,0,mainscreensrc,AL_POSITION);
+    //setListenerstuff(1000,300,0,AL_POSITION);
+}
+
+void switchtoPlay()
+{
+    playinit();
+    gamestate = PLAYING;
+    alSourceStop(mainscreensrc);
+    alSourcePlay(playsrc);
+    glutDisplayFunc(playGame);
+}
+
+void switchtoGameOver()
+{
+    gamestate = GAMEOVER;
+    int i;
+    for(i=0;i<NUM_SOURCES;i++)
+        alSourceStop(sources[i]);
+
+    /*if(attachAudio(&gameoversrc,&gameoverbuffer,"audiofiles/SomeRandomThingBellsSoft.wav") == -1)
+    {
+        alDeleteBuffers(NUM_BUFFERS, buffers);
+        alDeleteBuffers(1, &mainscreenbuffer);
+        alDeleteBuffers(1, &playbuffer);
+        alDeleteBuffers(1, &gameoverbuffer);
+        _exit(1);
+    }*/
+
+    alSourceStop(playsrc);
+    alSourcePlay(gameoversrc);
+    glutDisplayFunc(gameOverScreen);
+}
+
+void myReshape(int w, int h)
+{
+    reshapex = (float)w/WIDTH;
+    reshapey = (float)h/HEIGHT;
 }
 
 int main(int argc,char *argv[])
@@ -894,6 +932,7 @@ int main(int argc,char *argv[])
     glutPassiveMotionFunc(mouseOverButtons);
     glutKeyboardFunc(keys);
     glutIdleFunc(myidle);
+    //glutReshapeFunc(myReshape);
 
     alSourcePlay(mainscreensrc);
     glutMainLoop();
