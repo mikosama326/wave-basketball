@@ -838,13 +838,13 @@ void setAudio()
     }
 
     //Set the Main Menu and Play screen buffers
-    if(attachAudio(&mainscreensrc,&mainscreenbuffer,"audiofiles/HideFromAll_3.wav") == -1)
+    if(attachAudio(&mainscreensrc,&mainscreenbuffer,"audiofiles/HideFromAll.wav") == -1)
     {
         alDeleteBuffers(NUM_BUFFERS, buffers);
         alDeleteBuffers(1, &mainscreenbuffer);
         exit(1);
     }
-    if(attachAudio(&playsrc,&playbuffer,"audiofiles/SomeRandomThingSoftBG.wav") == -1)
+    if(attachAudio(&playsrc,&playbuffer,"audiofiles/HideFromAllBG.wav") == -1)
     {
         alDeleteBuffers(NUM_BUFFERS, buffers);
         alDeleteBuffers(1, &mainscreenbuffer);
