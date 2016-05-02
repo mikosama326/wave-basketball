@@ -6,11 +6,14 @@
 
 int error;
 
-int audioinit(int NUM_BUFFERS, int NUM_SOURCES, ALuint *buffers, ALuint *sources)
+void audioinit()
 {
     alutInit(0, NULL);
     alGetError();
+}
 
+int audioinitsrc(int NUM_BUFFERS, int NUM_SOURCES, ALuint *buffers, ALuint *sources)
+{
     // Create the buffers
     alGenBuffers(NUM_BUFFERS, buffers);
     if ((error = alGetError()) != AL_NO_ERROR)

@@ -80,14 +80,14 @@
 	"Vector.h"
 	<math.h>
 
-1462160628 source:/home/mikosama/CGProject/WaveBasketball/AudioStuff.cpp
+1462198453 source:/home/mikosama/CGProject/WaveBasketball/AudioStuff.cpp
 	<AL/al.h>
 	<AL/alc.h>
 	<AL/alut.h>
 	<stdio.h>
 	<stdlib.h>
 
-1462180334 source:/home/mikosama/CGProject/WaveBasketball/main.cpp
+1462200015 source:/home/mikosama/CGProject/WaveBasketball/main.cpp
 	<iostream>
 	<GL/glut.h>
 	<stdio.h>
@@ -102,7 +102,7 @@
 	"Ball.h"
 	"AudioStuff.h"
 
-1462098785 /home/mikosama/CGProject/WaveBasketball/AudioStuff.h
+1462198452 /home/mikosama/CGProject/WaveBasketball/AudioStuff.h
 	<AL/al.h>
 	<AL/alc.h>
 	<AL/alut.h>

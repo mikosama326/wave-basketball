@@ -805,14 +805,18 @@ void scoreSave1()// Saves your highscore for later
 void setAudio()
 {
     int i;
-    //int error;
+    int error;
+
+    audioinit();
 
     //Generate buffers and sources
-    if(audioinit(NUM_BUFFERS,NUM_SOURCES,buffers,sources) == -1)
+    if(audioinitsrc(NUM_BUFFERS,NUM_SOURCES,buffers,sources) == -1)
         exit(1);
-    if(audioinit(1,1,&mainscreenbuffer,&mainscreensrc) == -1)
+    if(audioinitsrc(1,1,&mainscreenbuffer,&mainscreensrc) == -1)
         exit(1);
-    if(audioinit(1,1,&playbuffer,&playsrc) == -1)
+    if(audioinitsrc(1,1,&playbuffer,&playsrc) == -1)
+        exit(1);
+    if(audioinitsrc(1,1,&gameoverbuffer,&gameoversrc) == -1)
         exit(1);
 
     //Set the keypress buffers
@@ -844,6 +848,20 @@ void setAudio()
         alDeleteBuffers(1, &mainscreenbuffer);
         exit(1);
     }
+
+    if(attachAudio(&gameoversrc,&gameoverbuffer,"audiofiles/HideFromAllEnd2.wav") == -1)
+    {
+        alDeleteBuffers(NUM_BUFFERS, buffers);
+        alDeleteBuffers(1, &mainscreenbuffer);
+        exit(1);
+    }
+    /*alSourcei(gameoversrc, AL_BUFFER, mainscreenbuffer);
+    if ((error = alGetError()) != AL_NO_ERROR)
+    {
+      printf("alSourcei %s : %x\n","gameover",error);
+      _exit(1);
+    }*/
+
     if(attachAudio(&playsrc,&playbuffer,"audiofiles/HideFromAllBG.wav") == -1)
     {
         alDeleteBuffers(NUM_BUFFERS, buffers);
@@ -852,7 +870,14 @@ void setAudio()
         exit(1);
     }
 
-    gameoversrc = mainscreensrc;
+    //gameoversrc = mainscreensrc;
+
+    /*alSourcei(gameoversrc, AL_BUFFER, mainscreenbuffer);
+    if ((error = alGetError()) != AL_NO_ERROR)
+    {
+      printf("alSourcei %s : %x\n","gameover",error);
+      _exit(1);
+    }*/
 
     alSourcei(mainscreensrc,AL_LOOPING, 1);
     alSourcei(playsrc, AL_LOOPING, 1);
