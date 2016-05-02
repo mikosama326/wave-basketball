@@ -34,6 +34,7 @@ using namespace std;
 //#define FLOORRES 1
 
 /* ------ Warning: Total mess up ahead ----- */
+/* --------- READ AT YOUR OWN RISK  -------- */
 
 float floorval[WIDTH*FLOORRES];
 Ball b;
