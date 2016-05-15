@@ -186,6 +186,7 @@ void Ball :: checkscore()
             flag = 0;
             break;
     }
+
     if(score > highscore)
     {
         highscore = score;

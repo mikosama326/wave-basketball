@@ -202,6 +202,7 @@ void mainmenu()// Main Menu display function
 
 void basket()// Draws a basket.
 {
+    //glColor4f(0.671875,0,0,0.5);
     glColor3f(0.671875,0,0);
     glBegin(GL_QUADS);
     glVertex2f(WIDTH-100,400);
@@ -210,13 +211,20 @@ void basket()// Draws a basket.
     glVertex2f(WIDTH-100,407);
     glEnd();
 
-    glColor3f(0.4,0.4,0.4);
+    glEnable(GL_BLEND);
+    //glEnable(GL_TEXTURE_2D);
+
+    glColor4f(0.4,0.4,0.4,0.5);
+    //glColor3f(0.4,0.4,0.4);
     glBegin(GL_QUADS);
     glVertex2f(WIDTH-95,400);
     glVertex2f(WIDTH-5,400);
     glVertex2f(WIDTH-15,320);
     glVertex2f(WIDTH-85,320);
     glEnd();
+
+    //glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND);
 
     glColor3f(0,0,0);
     glBegin(GL_LINE_LOOP);
@@ -439,11 +447,11 @@ void playGame()// The actual game display function
     //glDisable(GL_BLEND);
 
     glLineWidth(2);
-    basket();
 
     drawfloor();
     b.draw_ball();
 
+    basket();
 
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
