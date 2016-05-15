@@ -51,6 +51,7 @@ GLuint MainMenuImg, StartButtonImg, StartButtonImgOver, BackdropImg, SmallExitIm
 int starttime;//handles the weird issue with the timer starting earlier than the game
 
 float reshapex = 1, reshapey = 1;//Meant for handling what happens if we reshape the game.
+int width = WIDTH,height = HEIGHT;
 
 //Variables for openAL
 ALuint buffers[NUM_BUFFERS];
@@ -75,6 +76,18 @@ void switchtoPlay();
 
 void my_exit()// A custom exit function
 {
+    /*if(score > highscores[HIGHSCORES_SIZE-1])
+        for(i=0;i<HIGHSCORES_SIZE;i++)
+        {
+            if(score > highscores[i])
+            {
+                for(j=HIGHSCORES_SIZE-1;j >= (i+1);j--)
+                    highscores[j] = highscores[j-1];
+                highscores[i] = score;
+                return;
+            }
+        }*/
+
     alSourceStop(mainscreensrc);
     glutIdleFunc(0); // Turn off Idle function if used.
     glutDestroyWindow(window);
@@ -118,7 +131,7 @@ void drawQuadTex(float xmin, float ymin, float xmax, float ymax, GLuint tex)// T
     if(tex == 0)
         return;
     //Bind our texture.
-    glBindTexture (GL_TEXTURE_2D, tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
 
     glColor3f(1,1,1);
     glBegin(GL_QUADS);
@@ -453,11 +466,12 @@ void playGame()// The actual game display function
 
 void mouseOverButtons(int x, int y)// The mouseover callback function
 {
+    y = height-y;
     switch(gamestate)
     {
         case MAINMENU:
-            if(x >= START_BUTTON_X*reshapex && x <= (START_BUTTON_X + 170)*reshapex)
-                if(y <= (HEIGHT - START_BUTTON_Y)*reshapey && y >= ((HEIGHT - START_BUTTON_Y) - 60)*reshapey)
+            if(x >= START_BUTTON_X && x <= (START_BUTTON_X + 170))
+                if(y >= (START_BUTTON_Y) && y <= ((START_BUTTON_Y) + 60))
                 {
                     StartButton = StartButtonImgOver;
                     break;
@@ -490,21 +504,21 @@ void playinit()// Initializes some parameters after clicking 'Start'
 
 void mouse(int btn, int state, int x, int y)// Mouse event callback function
 {
+    y = height-y;
     switch(gamestate)
     {
         case MAINMENU:
-            if(x >= START_BUTTON_X*reshapex && x <= (START_BUTTON_X + 140)*reshapex)
-                if(y <= (HEIGHT - START_BUTTON_Y)*reshapey && y >= ((HEIGHT - START_BUTTON_Y) - 50)*reshapey)
+            if(x >= START_BUTTON_X && x <= (START_BUTTON_X + 140))
+                if(y >= (START_BUTTON_Y) && y <= ((START_BUTTON_Y) + 50))
                     if(btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
                     {
                         switchtoPlay();
                         glutPostRedisplay();
-                        //myinit();
                     }
             break;
         case PLAYING:
-        if(x >= EXIT_BUTTON_SMALL_X*reshapex && x <= (EXIT_BUTTON_SMALL_X + 170)*reshapex)
-                if(y <= (HEIGHT - EXIT_BUTTON_SMALL_Y)*reshapey && y >= ((HEIGHT - EXIT_BUTTON_SMALL_Y) - 60)*reshapey)
+        if(x >= EXIT_BUTTON_SMALL_X && x <= (EXIT_BUTTON_SMALL_X + 170))
+                if(y >= (EXIT_BUTTON_SMALL_Y) && y <= ((EXIT_BUTTON_SMALL_Y) + 60))
                     if(btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
                     {
                         switchtoGameOver();
@@ -512,8 +526,8 @@ void mouse(int btn, int state, int x, int y)// Mouse event callback function
                     }
         break;
         case GAMEOVER:
-            if(x >= EXIT_BUTTON_X*reshapex && x <= (EXIT_BUTTON_X + 170)*reshapex)
-                if(y <= (HEIGHT - EXIT_BUTTON_Y)*reshapey && y >= ((HEIGHT - EXIT_BUTTON_Y) - 60)*reshapey)
+            if(x >= EXIT_BUTTON_X && x <= (EXIT_BUTTON_X + 170))
+                if(y >= (EXIT_BUTTON_Y) && y <= ((EXIT_BUTTON_Y) + 60))
                     if(btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
                         my_exit();
         break;
@@ -904,15 +918,6 @@ void switchtoGameOver()
     for(i=0;i<NUM_SOURCES;i++)
         alSourceStop(sources[i]);
 
-    /*if(attachAudio(&gameoversrc,&gameoverbuffer,"audiofiles/SomeRandomThingBellsSoft.wav") == -1)
-    {
-        alDeleteBuffers(NUM_BUFFERS, buffers);
-        alDeleteBuffers(1, &mainscreenbuffer);
-        alDeleteBuffers(1, &playbuffer);
-        alDeleteBuffers(1, &gameoverbuffer);
-        _exit(1);
-    }*/
-
     alSourceStop(playsrc);
     alSourcePlay(gameoversrc);
     glutDisplayFunc(gameOverScreen);
@@ -920,8 +925,12 @@ void switchtoGameOver()
 
 void myReshape(int w, int h)
 {
-    reshapex = (float)w/WIDTH;
-    reshapey = (float)h/HEIGHT;
+    //reshapex = (float)w/WIDTH;
+    //reshapey = (float)h/HEIGHT;
+    //glClearColor(0.5,0.5,0.5,1);
+    //glutReshapeWindow(w,h);
+    width = w;
+    height = h;
 }
 
 int main(int argc,char *argv[])
@@ -958,8 +967,7 @@ int main(int argc,char *argv[])
     glutPassiveMotionFunc(mouseOverButtons);
     glutKeyboardFunc(keys);
     glutIdleFunc(myidle);
-    //glutReshapeFunc(myReshape);
-
+    glutReshapeFunc(myReshape);
     alSourcePlay(mainscreensrc);
     glutMainLoop();
 

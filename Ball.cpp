@@ -191,17 +191,6 @@ void Ball :: checkscore()
         highscore = score;
         highscoreflag = 1;
     }
-    if(score > highscores[HIGHSCORES_SIZE-1])
-        for(i=0;i<HIGHSCORES_SIZE;i++)
-        {
-            if(score > highscores[i])
-            {
-                for(j=HIGHSCORES_SIZE-1;j >= (i+1);j--)
-                    highscores[j] = highscores[j-1];
-                highscores[i] = score;
-                return;
-            }
-        }
 }
 
 void Ball :: reset()
