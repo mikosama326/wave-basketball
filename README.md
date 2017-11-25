@@ -1,10 +1,18 @@
-# Wave Basketball
+# Audio Basketball
+
+aka Wave Basketball
 
 My 6th Semester Computer Graphics project.
 
-A simple game in (badly written) C++ with OpenGL where we get to play music and toss a basketball around. At the same time!
+A simple game in C++ with OpenGL where we get to play music and toss a basketball around. At the same time!
 
-You'll need the GL, GLU, glut, openal and alut libraries to build. Or you can just use the executable I already built for you. You're welcome.
+You'll need the GL, GLU, glut, SOIL, openal and alut libraries to build. Install the required libraries and then run the build.sh file. That should be enough.
+
+Installing libraries:
+OpenGL:	sudo apt-get install freeglut3-dev
+SOIL: 	sudo apt-get install libsoil-dev
+OpenAL: 	sudo apt-get install libopenal-dev
+ALUT:   	sudo apt-get install libalut-dev
 
 Oh, and for now, it'll run only on UNIX systems. I'll work on getting it to work on Windows later.
 

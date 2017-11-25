@@ -55,7 +55,7 @@ int attachAudio(ALuint *source, ALuint *buffer, const char *file)//Load an audio
 void setSourcestuff(ALfloat x,ALfloat y,ALfloat z, ALuint sid,ALenum param)
 {
     ALfloat sourcevec[] = {x,y,z};
-    alSourcefv (sid, param, sourcevec);
+    alSourcefv(sid, param, sourcevec);
 }
 
 void setListenerstuff(ALfloat x,ALfloat y,ALfloat z,ALenum param)

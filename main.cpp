@@ -75,6 +75,18 @@ void switchtoPlay();
 
 void my_exit()// A custom exit function
 {
+    /*if(score > highscores[HIGHSCORES_SIZE-1])
+        for(i=0;i<HIGHSCORES_SIZE;i++)
+        {
+            if(score > highscores[i])
+            {
+                for(j=HIGHSCORES_SIZE-1;j >= (i+1);j--)
+                    highscores[j] = highscores[j-1];
+                highscores[i] = score;
+                return;
+            }
+        }*/
+
     alSourceStop(mainscreensrc);
     glutIdleFunc(0); // Turn off Idle function if used.
     glutDestroyWindow(window);
@@ -118,7 +130,7 @@ void drawQuadTex(float xmin, float ymin, float xmax, float ymax, GLuint tex)// T
     if(tex == 0)
         return;
     //Bind our texture.
-    glBindTexture (GL_TEXTURE_2D, tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
 
     glColor3f(1,1,1);
     glBegin(GL_QUADS);
@@ -903,15 +915,6 @@ void switchtoGameOver()
     int i;
     for(i=0;i<NUM_SOURCES;i++)
         alSourceStop(sources[i]);
-
-    /*if(attachAudio(&gameoversrc,&gameoverbuffer,"audiofiles/SomeRandomThingBellsSoft.wav") == -1)
-    {
-        alDeleteBuffers(NUM_BUFFERS, buffers);
-        alDeleteBuffers(1, &mainscreenbuffer);
-        alDeleteBuffers(1, &playbuffer);
-        alDeleteBuffers(1, &gameoverbuffer);
-        _exit(1);
-    }*/
 
     alSourceStop(playsrc);
     alSourcePlay(gameoversrc);
