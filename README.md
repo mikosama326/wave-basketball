@@ -8,11 +8,16 @@ A simple game in C++ with OpenGL where we get to play music and toss a basketbal
 
 You'll need the GL, GLU, glut, SOIL, openal and alut libraries to build. Install the required libraries and then run the build.sh file. That should be enough.
 
-Installing libraries:
+## Installing libraries:
 OpenGL:	```sudo apt-get install freeglut3-dev```
+
 SOIL: 	```sudo apt-get install libsoil-dev```
+
 OpenAL: 	```sudo apt-get install libopenal-dev```
+
 ALUT:   	```sudo apt-get install libalut-dev```
+
+## More notes
 
 Oh, and for now, it'll run only on UNIX systems. I'll work on getting it to work on Windows later.
 
